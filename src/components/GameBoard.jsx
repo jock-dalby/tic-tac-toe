@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
@@ -7,27 +5,27 @@ const INITIAL_GAME_BOARD = [
 ];
 
 export default function GameBoard({ onSelectSquare, symbol }) {
-  const [gameBoard, setGameBoard] = useState(INITIAL_GAME_BOARD);
+  //   const [gameBoard, setGameBoard] = useState(INITIAL_GAME_BOARD);
 
-  function handleSelectSquare(rowIndex, colIndex) {
-    setGameBoard((prevGameBoard) => {
-      const updatedBoard = [
-        ...prevGameBoard.map((innerArray) => [...innerArray]),
-      ];
-      updatedBoard[rowIndex][colIndex] = symbol;
-      return updatedBoard;
-    });
-    onSelectSquare();
-  }
+  //   function handleSelectSquare(rowIndex, colIndex) {
+  //     setGameBoard((prevGameBoard) => {
+  //       const updatedBoard = [
+  //         ...prevGameBoard.map((innerArray) => [...innerArray]),
+  //       ];
+  //       updatedBoard[rowIndex][colIndex] = symbol;
+  //       return updatedBoard;
+  //     });
+  //     onSelectSquare();
+  //   }
 
   return (
     <ol id="game-board">
-      {gameBoard.map((row, rowIndex) => (
+      {INITIAL_GAME_BOARD.map((row, rowIndex) => (
         <li key={rowIndex}>
           <ol>
             {row.map((cellValue, colIndex) => (
               <li key={colIndex}>
-                <button onClick={() => handleSelectSquare(rowIndex, colIndex)}>
+                <button onClick={() => onSelectSquare(rowIndex, colIndex)}>
                   {cellValue}
                 </button>
               </li>
