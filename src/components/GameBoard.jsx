@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 const INITIAL_GAME_BOARD = [
-  ["X", null, null],
+  [null, null, null],
   [null, null, null],
   [null, null, null],
 ];
 
-export default function GameBoard() {
+export default function GameBoard({ onSelectSquare, symbol }) {
   const [gameBoard, setGameBoard] = useState(INITIAL_GAME_BOARD);
 
   function handleSelectSquare(rowIndex, colIndex) {
@@ -14,9 +14,10 @@ export default function GameBoard() {
       const updatedBoard = [
         ...prevGameBoard.map((innerArray) => [...innerArray]),
       ];
-      updatedBoard[rowIndex][colIndex] = "X";
+      updatedBoard[rowIndex][colIndex] = symbol;
       return updatedBoard;
     });
+    onSelectSquare();
   }
 
   return (
