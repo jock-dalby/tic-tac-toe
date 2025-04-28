@@ -5,7 +5,7 @@ import Log from "./components/Log";
 import Player from "./components/Player";
 
 const CROSS_SYMBOL = "X";
-const NOUGHT_SYMBOL = "X";
+const NOUGHT_SYMBOL = "O";
 
 const PLAYERS = [
   {
@@ -51,7 +51,11 @@ function App() {
             />
           ))}
         </ol>
-        <GameBoard onSelectSquare={handleSelectSquare} symbol={activePlayer} />
+        <GameBoard
+          onSelectSquare={handleSelectSquare}
+          symbol={activePlayer}
+          turns={gameTurns}
+        />
       </div>
       <Log />
     </main>
