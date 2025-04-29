@@ -15,33 +15,12 @@ const INITIAL_GAME_BOARD = [
 const CROSS_SYMBOL = "X";
 const NOUGHT_SYMBOL = "O";
 
-const PLAYERS = [
-  {
-    name: "Player 1",
-    symbol: CROSS_SYMBOL,
-  },
-  {
-    name: "Player 2",
-    symbol: NOUGHT_SYMBOL,
-  },
-];
+const PLAYERS = {
+  [CROSS_SYMBOL]: "Player 1",
+  [NOUGHT_SYMBOL]: "Player 2",
+};
 
-function getActivePlayer(turns) {
-  return turns[0]?.player === CROSS_SYMBOL ? NOUGHT_SYMBOL : CROSS_SYMBOL;
-}
-
-function App() {
-  const [playerNames, setPlayerNames] = useState(
-    PLAYERS.reduce((acc, { name, symbol }) => {
-      acc[symbol] = name;
-      return acc;
-    }),
-    {},
-  );
-  const [gameTurns, setGameTurns] = useState([]);
-
-  const activePlayer = getActivePlayer(gameTurns);
-
+function getGameBoard(gameTurns) {
   const gameBoard = INITIAL_GAME_BOARD.map((row) => [...row]);
 
   for (const turn of gameTurns) {
@@ -50,14 +29,19 @@ function App() {
 
     gameBoard[row][col] = player;
   }
+  return gameBoard;
+}
 
-  let winner = null;
+function getActivePlayer(turns) {
+  return turns[0]?.player === CROSS_SYMBOL ? NOUGHT_SYMBOL : CROSS_SYMBOL;
+}
 
+function getWinner(board) {
+  let winner;
   WINNING_COMBINATIONS.forEach((combination) => {
-    const firstSquareSymbol = gameBoard[combination[0].row][combination[0].col];
-    const secondSquareSymbol =
-      gameBoard[combination[1].row][combination[1].col];
-    const thirdSquareSymbol = gameBoard[combination[2].row][combination[2].col];
+    const firstSquareSymbol = board[combination[0].row][combination[0].col];
+    const secondSquareSymbol = board[combination[1].row][combination[1].col];
+    const thirdSquareSymbol = board[combination[2].row][combination[2].col];
     if (
       firstSquareSymbol &&
       firstSquareSymbol === secondSquareSymbol &&
@@ -66,7 +50,16 @@ function App() {
       winner = firstSquareSymbol;
     }
   });
+  return winner;
+}
 
+function App() {
+  const [playerNames, setPlayerNames] = useState(PLAYERS);
+  const [gameTurns, setGameTurns] = useState([]);
+
+  const gameBoard = getGameBoard(gameTurns);
+  const activePlayer = getActivePlayer(gameTurns);
+  const winner = getWinner(gameBoard);
   const hasDraw = gameTurns.length === 9 && !winner;
 
   function handleSelectSquare(rowIndex, colIndex) {
@@ -80,7 +73,7 @@ function App() {
     });
   }
 
-  function handlePlayernameChange(symbol, newName) {
+  function handlePlayerNameChange(symbol, newName) {
     setPlayerNames((prevPlayers) => {
       return {
         ...prevPlayers,
@@ -93,12 +86,13 @@ function App() {
     <main>
       <div id="game-container">
         <ol id="players" className="highlight-player">
-          {PLAYERS.map((props) => (
+          {Object.entries(PLAYERS).map(([symbol, name]) => (
             <Player
-              key={props.name}
-              {...props}
-              isActive={activePlayer === props.symbol}
-              onNameChange={handlePlayernameChange}
+              key={name}
+              name={name}
+              symbol={symbol}
+              isActive={activePlayer === symbol}
+              onNameChange={handlePlayerNameChange}
             />
           ))}
         </ol>
