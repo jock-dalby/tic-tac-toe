@@ -18,19 +18,18 @@ const PLAYERS = [
   },
 ];
 
+function getActivePlayer(turns) {
+  return turns[0]?.player === CROSS_SYMBOL ? NOUGHT_SYMBOL : CROSS_SYMBOL;
+}
+
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
-  const [activePlayer, setActivePlayer] = useState(CROSS_SYMBOL);
+
+  const activePlayer = getActivePlayer(gameTurns);
 
   function handleSelectSquare(rowIndex, colIndex) {
-    setActivePlayer((prevState) =>
-      prevState === CROSS_SYMBOL ? NOUGHT_SYMBOL : CROSS_SYMBOL,
-    );
     setGameTurns((prevTurns) => {
-      let currentPlayer = CROSS_SYMBOL;
-      if (prevTurns[0]?.player === CROSS_SYMBOL) {
-        currentPlayer = NOUGHT_SYMBOL;
-      }
+      const currentPlayer = getActivePlayer(prevTurns);
       const updatedTurns = [
         { square: { row: rowIndex, col: colIndex }, player: currentPlayer },
         ...prevTurns,
@@ -57,7 +56,7 @@ function App() {
           turns={gameTurns}
         />
       </div>
-      <Log />
+      <Log turns={gameTurns} />
     </main>
   );
 }
