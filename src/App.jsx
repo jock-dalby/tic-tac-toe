@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import GameBoard from "./components/GameBoard";
+import GameOver from "./components/GameOver";
 import Log from "./components/Log";
 import Player from "./components/Player";
 import { WINNING_COMBINATIONS } from "./winning-combinations";
@@ -43,7 +44,7 @@ function App() {
     gameBoard[row][col] = player;
   }
 
-  let hasWinner = null;
+  let winner = null;
 
   WINNING_COMBINATIONS.forEach((combination) => {
     const firstSquareSymbol = gameBoard[combination[0].row][combination[0].col];
@@ -55,9 +56,11 @@ function App() {
       firstSquareSymbol === secondSquareSymbol &&
       secondSquareSymbol === thirdSquareSymbol
     ) {
-      hasWinner = firstSquareSymbol;
+      winner = firstSquareSymbol;
     }
   });
+
+  const hasDraw = gameTurns.length === 9 && !winner;
 
   function handleSelectSquare(rowIndex, colIndex) {
     setGameTurns((prevTurns) => {
@@ -82,7 +85,7 @@ function App() {
             />
           ))}
         </ol>
-        {hasWinner && <p>You won, {hasWinner}!</p>}
+        {(winner || hasDraw) && <GameOver winner={winner} />}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
       <Log turns={gameTurns} />
