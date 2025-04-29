@@ -31,6 +31,13 @@ function getActivePlayer(turns) {
 }
 
 function App() {
+  const [playerNames, setPlayerNames] = useState(
+    PLAYERS.reduce((acc, { name, symbol }) => {
+      acc[symbol] = name;
+      return acc;
+    }),
+    {},
+  );
   const [gameTurns, setGameTurns] = useState([]);
 
   const activePlayer = getActivePlayer(gameTurns);
@@ -73,6 +80,15 @@ function App() {
     });
   }
 
+  function handlePlayernameChange(symbol, newName) {
+    setPlayerNames((prevPlayers) => {
+      return {
+        ...prevPlayers,
+        [symbol]: newName,
+      };
+    });
+  }
+
   return (
     <main>
       <div id="game-container">
@@ -82,11 +98,15 @@ function App() {
               key={props.name}
               {...props}
               isActive={activePlayer === props.symbol}
+              onNameChange={handlePlayernameChange}
             />
           ))}
         </ol>
         {(winner || hasDraw) && (
-          <GameOver winner={winner} onRematch={() => setGameTurns([])} />
+          <GameOver
+            winner={playerNames[winner]}
+            onRematch={() => setGameTurns([])}
+          />
         )}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>

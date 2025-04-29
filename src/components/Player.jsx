@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Player({ name, symbol, isActive }) {
+function Player({ name, symbol, isActive, onNameChange }) {
   const [playerName, setPlayerName] = useState(name);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -10,6 +10,7 @@ function Player({ name, symbol, isActive }) {
 
   const handleChange = (e) => {
     setPlayerName(e.target.value);
+    onNameChange(symbol, e.target.value);
   };
 
   let playerNameCmpt = <span className="player-name">{playerName}</span>;
@@ -21,7 +22,7 @@ function Player({ name, symbol, isActive }) {
   }
 
   return (
-    <li className={isActive && "active"}>
+    <li className={isActive ? "active" : ""}>
       <span className="player">
         {playerNameCmpt}
         <span className="player-symbol">{symbol}</span>
